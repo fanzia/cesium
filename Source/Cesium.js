@@ -498,6 +498,7 @@ export { default as GoogleEarthEnterpriseMapsProvider } from './Scene/GoogleEart
 export { default as GridImageryProvider } from './Scene/GridImageryProvider.js';
 export { default as GroundPolylinePrimitive } from './Scene/GroundPolylinePrimitive.js';
 export { default as GroundPrimitive } from './Scene/GroundPrimitive.js';
+export { default as HeatmapImageryProvider } from './Scene/HeatmapImageryProvider.js';
 export { default as HeightReference } from './Scene/HeightReference.js';
 export { default as HorizontalOrigin } from './Scene/HorizontalOrigin.js';
 export { default as Imagery } from './Scene/Imagery.js';

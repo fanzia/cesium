@@ -31001,6 +31001,242 @@ export class GroundPrimitive {
 }
 
 /**
+ * Provides a single, top-level imagery tile.  The single image is assumed to use a
+{@link GeographicTilingScheme}.
+ * @param options - Object with the following properties:
+ * @param [options.heatmapoptions] - Optional heatmap.js options to be used (see http://www.patrick-wied.at/static/heatmapjs/docs.html#h337-create).
+ * @param [options.bounds] - The bounding box for the heatmap in WGS84 coordinates.
+ * @param [options.bounds.north] - The northernmost point of the heatmap.
+ * @param [options.bounds.south] - The southernmost point of the heatmap.
+ * @param [options.bounds.west] - The westernmost point of the heatmap.
+ * @param [options.bounds.east] - The easternmost point of the heatmap.
+ * @param [options.data] - Data to be used for the heatmap.
+ * @param [options.data.min] - Minimum allowed point value.
+ * @param [options.data.max] - Maximum allowed point value.
+ * @param [options.data.points] - The data points for the heatmap containing x=lon, y=lat and value=number.
+ */
+export class HeatmapImageryProvider {
+    constructor(options: {
+        heatmapoptions?: any;
+        bounds?: {
+            north?: number;
+            south?: number;
+            west?: number;
+            east?: number;
+        };
+        data?: {
+            min?: any;
+            max?: any;
+            points?: any[];
+        };
+    });
+    /**
+     * Gets the URL of the single, top-level imagery tile.
+     */
+    readonly url: string;
+    /**
+     * Gets the width of each tile, in pixels. This function should
+    not be called before {@link HeatmapImageryProvider#ready} returns true.
+     */
+    readonly tileWidth: number;
+    /**
+     * Gets the height of each tile, in pixels.  This function should
+    not be called before {@link HeatmapImageryProvider#ready} returns true.
+     */
+    readonly tileHeight: number;
+    /**
+     * Gets the maximum level-of-detail that can be requested.  This function should
+    not be called before {@link HeatmapImageryProvider#ready} returns true.
+     */
+    readonly maximumLevel: number;
+    /**
+     * Gets the minimum level-of-detail that can be requested.  This function should
+    not be called before {@link HeatmapImageryProvider#ready} returns true.
+     */
+    readonly minimumLevel: number;
+    /**
+     * Gets the tiling scheme used by this provider.  This function should
+    not be called before {@link HeatmapImageryProvider#ready} returns true.
+     */
+    readonly tilingScheme: TilingScheme;
+    /**
+     * Gets the rectangle, in radians, of the imagery provided by this instance.  This function should
+    not be called before {@link HeatmapImageryProvider#ready} returns true.
+     */
+    readonly rectangle: Rectangle;
+    /**
+     * Gets the tile discard policy.  If not undefined, the discard policy is responsible
+    for filtering out "missing" tiles via its shouldDiscardImage function.  If this function
+    returns undefined, no tiles are filtered.  This function should
+    not be called before {@link HeatmapImageryProvider#ready} returns true.
+     */
+    readonly tileDiscardPolicy: TileDiscardPolicy;
+    /**
+     * Gets an event that is raised when the imagery provider encounters an asynchronous error.  By subscribing
+    to the event, you will be notified of the error and can potentially recover from it.  Event listeners
+    are passed an instance of {@link TileProviderError}.
+     */
+    readonly errorEvent: Event;
+    /**
+     * Gets a value indicating whether or not the provider is ready for use.
+     */
+    readonly ready: boolean;
+    /**
+     * Gets a promise that resolves to true when the provider is ready for use.
+     */
+    readonly readyPromise: Promise<boolean>;
+    /**
+     * Gets the credit to display when this imagery provider is active.  Typically this is used to credit
+    the source of the imagery.  This function should not be called before {@link HeatmapImageryProvider#ready} returns true.
+     */
+    readonly credit: Credit;
+    /**
+     * Gets a value indicating whether or not the images provided by this imagery provider
+    include an alpha channel.  If this property is false, an alpha channel, if present, will
+    be ignored.  If this property is true, any images without an alpha channel will be treated
+    as if their alpha is 1.0 everywhere.  When this property is false, memory usage
+    and texture upload time are reduced.
+     */
+    readonly hasAlphaChannel: boolean;
+    /**
+     * Convert a WGS84 location into a Mercator location.
+     * @param point - The WGS84 location.
+     * @param [point.x] - The longitude of the location.
+     * @param [point.y] - The latitude of the location.
+     * @returns The Mercator location.
+     */
+    wgs84ToMercator(point: {
+        x?: number;
+        y?: number;
+    }): Cartesian3;
+    /**
+     * Convert a WGS84 bounding box into a Mercator bounding box.
+     * @param bounds - The WGS84 bounding box.
+     * @param [bounds.north] - The northernmost position.
+     * @param [bounds.south] - The southrnmost position.
+     * @param [bounds.east] - The easternmost position.
+     * @param [bounds.west] - The westernmost position.
+     * @returns The Mercator bounding box containing north, south, east and west properties.
+     */
+    wgs84ToMercatorBB(bounds: {
+        north?: number;
+        south?: number;
+        east?: number;
+        west?: number;
+    }): any;
+    /**
+     * Convert a mercator location into a WGS84 location.
+     * @param point - The Mercator lcation.
+     * @param [point.x] - The x of the location.
+     * @param [point.y] - The y of the location.
+     * @returns The WGS84 location.
+     */
+    mercatorToWgs84(point: {
+        x?: number;
+        y?: number;
+    }): any;
+    /**
+     * Convert a Mercator bounding box into a WGS84 bounding box.
+     * @param bounds - The Mercator bounding box.
+     * @param [bounds.north] - The northernmost position.
+     * @param [bounds.south] - The southrnmost position.
+     * @param [bounds.east] - The easternmost position.
+     * @param [bounds.west] - The westernmost position.
+     * @returns The WGS84 bounding box containing north, south, east and west properties.
+     */
+    mercatorToWgs84BB(bounds: {
+        north?: number;
+        south?: number;
+        east?: number;
+        west?: number;
+    }): any;
+    /**
+     * Convert degrees into radians.
+     * @param degrees - The degrees to be converted to radians.
+     * @returns The converted radians.
+     */
+    deg2rad(degrees: number): number;
+    /**
+     * Convert radians into degrees.
+     * @param radians - The radians to be converted to degrees.
+     * @returns The converted degrees.
+     */
+    rad2deg(radians: number): number;
+    /**
+     * Convert a WGS84 location to the corresponding heatmap location.
+     * @param point - The WGS84 location.
+     * @param [point.x] - The longitude of the location.
+     * @param [point.y] - The latitude of the location.
+     * @returns The corresponding heatmap location.
+     */
+    wgs84PointToHeatmapPoint(point: {
+        x?: number;
+        y?: number;
+    }): any;
+    /**
+     * Convert a mercator location to the corresponding heatmap location.
+     * @param point - The Mercator lcation.
+     * @param [point.x] - The x of the location.
+     * @param [point.y] - The y of the location.
+     * @returns The corresponding heatmap location.
+     */
+    mercatorPointToHeatmapPoint(point: {
+        x?: number;
+        y?: number;
+    }): any;
+    /**
+     * Set an array of heatmap locations.
+     * @param min - The minimum allowed value for the data points.
+     * @param max - The maximum allowed value for the data points.
+     * @param data - An array of data points with heatmap coordinates(x, y) and value
+     * @returns Wheter or not the data was successfully added or failed.
+     */
+    setData(min: number, max: number, data: any[]): boolean;
+    /**
+     * Set an array of WGS84 locations.
+     * @param min - The minimum allowed value for the data points.
+     * @param max - The maximum allowed value for the data points.
+     * @param data - An array of data points with WGS84 coordinates(x=lon, y=lat) and value
+     * @returns Wheter or not the data was successfully added or failed.
+     */
+    setWGS84Data(min: number, max: number, data: any[]): boolean;
+    /**
+     * Gets the credits to be displayed when a given tile is displayed.
+     * @param x - The tile X coordinate.
+     * @param y - The tile Y coordinate.
+     * @param level - The tile level;
+     * @returns The credits to be displayed when the tile is displayed.
+     */
+    getTileCredits(x: number, y: number, level: number): Credit[];
+    /**
+     * Requests the image for a given tile.  This function should
+    not be called before {@link HeatmapImageryProvider#ready} returns true.
+     * @param x - The tile X coordinate.
+     * @param y - The tile Y coordinate.
+     * @param level - The tile level.
+     * @returns A promise for the image that will resolve when the image is available, or
+             undefined if there are too many active requests to the server, and the request
+             should be retried later.  The resolved image may be either an
+             Image or a Canvas DOM object.
+     */
+    requestImage(x: number, y: number, level: number): Promise<HTMLImageElement | HTMLCanvasElement> | undefined;
+    /**
+     * Picking features is not currently supported by this imagery provider, so this function simply returns
+    undefined.
+     * @param x - The tile X coordinate.
+     * @param y - The tile Y coordinate.
+     * @param level - The tile level.
+     * @param longitude - The longitude at which to pick features.
+     * @param latitude - The latitude at which to pick features.
+     * @returns A promise for the picked features that will resolve when the asynchronous
+                      picking completes.  The resolved value is an array of {@link ImageryLayerFeatureInfo}
+                      instances.  The array may be empty if no features are found at the given location.
+                      It may also be undefined if picking is not supported.
+     */
+    pickFeatures(x: number, y: number, level: number, longitude: number, latitude: number): Promise<ImageryLayerFeatureInfo[]> | undefined;
+}
+
+/**
  * Represents the position relative to the terrain.
  */
 export enum HeightReference {
@@ -42504,6 +42740,7 @@ declare module "cesium/Source/Scene/GoogleEarthEnterpriseMapsProvider" { import 
 declare module "cesium/Source/Scene/GridImageryProvider" { import { GridImageryProvider } from 'cesium'; export default GridImageryProvider; }
 declare module "cesium/Source/Scene/GroundPolylinePrimitive" { import { GroundPolylinePrimitive } from 'cesium'; export default GroundPolylinePrimitive; }
 declare module "cesium/Source/Scene/GroundPrimitive" { import { GroundPrimitive } from 'cesium'; export default GroundPrimitive; }
+declare module "cesium/Source/Scene/HeatmapImageryProvider" { import { HeatmapImageryProvider } from 'cesium'; export default HeatmapImageryProvider; }
 declare module "cesium/Source/Scene/HeightReference" { import { HeightReference } from 'cesium'; export default HeightReference; }
 declare module "cesium/Source/Scene/HorizontalOrigin" { import { HorizontalOrigin } from 'cesium'; export default HorizontalOrigin; }
 declare module "cesium/Source/Scene/ImageryLayer" { import { ImageryLayer } from 'cesium'; export default ImageryLayer; }
